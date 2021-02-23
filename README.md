@@ -34,7 +34,7 @@ ThirdEye is not a generic dashboard builder toolkit. ThirdEye attempts to bring 
 
 ## Getting Involved
  
- - Ask questions on [Apache ThirdEye Slack](https://communityinviter.com/apps/apache-thirdeye/apache-thirdeye)
+ - Ask questions on [ThirdEye Slack](https://communityinviter.com/apps/apache-thirdeye/apache-thirdeye)
 
 ## Documentation
 
