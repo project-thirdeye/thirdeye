@@ -1,9 +1,2 @@
 coverage:
   ignore:
-    # Ignore all files under pinot-tools, pinot-perf and pinot-hadoop.
-    - pinot-tools/.*
-    - pinot-perf/.*
-    - pinot-hadoop/.*
-    # Ignore all the auto generated files.
-    - pinot-common/src/main/java/org/apache/pinot/common/request/*.java
-    - pinot-common/src/main/java/org/apache/pinot/common/response/ProcessingException.java

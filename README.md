@@ -1,123 +1,46 @@
-<!--
+# Introduction to ThirdEye
+[![Build Status](https://api.travis-ci.org/apache/incubator-pinot.svg?branch=master)](https://travis-ci.org/apache/incubator-pinot) [![license](https://img.shields.io/github/license/linkedin/pinot.svg)](LICENSE)
 
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+ThirdEye is an integrated tool for realtime monitoring of time series and interactive root-cause analysis. It enables anyone inside an organization to collaborate on effective identification and analysis of deviations in business and system metrics. ThirdEye supports the entire workflow from anomaly detection, over root-cause analysis, to issue resolution and post-mortem reporting.
 
-      http://www.apache.org/licenses/LICENSE-2.0
+## What is it for? (key features)
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
+Online monitoring and analysis of business and system metrics from multiple data sources. ThirdEye comes batteries included for both detection and analysis use cases. It aims to minimize the Mean-Time-To-Detection (MTTD) and Mean-Time-To-Recovery (MTTR) of production issues. ThirdEye improves its detection and analysis performance over time from incremental user feedback.
 
--->
-<img src="https://imgur.com/GNevDZ0.png" align="center" alt="Apache Pinot"/>
+**Detection**
+* Detection toolkit based on business rules and exponential smoothing
+* Realtime monitoring of high-dimensional time series
+* Native support for seasonality and permanent change points in time series
+* Email alerts with 1-click feedback for automated tuning of detection algorithms
 
----------------------------------------
+**Root-Cause Analysis**
+* Collaborative root-cause analysis dashboards
+* Interactive slice-and-dice of data, correlation analysis, and event identification
+* Reporting and archiving tools for anomalies and analyses
+* Knowledge graph construction over time from user feedback
 
-[![Build Status](https://api.travis-ci.org/apache/incubator-pinot.svg?branch=master)](https://travis-ci.org/apache/incubator-pinot)
-[![Release](https://img.shields.io/github/release/apache/incubator-pinot/all.svg)](https://pinot.apache.org/download/)
-[![codecov.io](https://codecov.io/github/apache/incubator-pinot/branch/master/graph/badge.svg)](https://codecov.io/github/apache/incubator-pinot)
-[![Join the chat at https://communityinviter.com/apps/apache-pinot/apache-pinot](https://img.shields.io/badge/slack-apache--pinot-brightgreen?logo=slack)](https://communityinviter.com/apps/apache-pinot/apache-pinot)
-[![Twitter Follow](https://img.shields.io/twitter/follow/apachepinot.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=apachepinot)
-[![license](https://img.shields.io/github/license/apache/pinot.svg)](LICENSE)
+**Integration**
+* Connectors for continuous time series data from Pinot, Presto, MySQL and CSV
+* Connectors for discrete event data sources, such as holidays from Google calendar
+* Plugin support for detection and analysis components
 
-- [What is Apache Pinot?](#what-is-apache-pinot)
-- [Features](#features)
-- [When should I use Pinot?](#when-should-i-use-pinot)
-- [Building Pinot](#building-pinot)
-- [Deploying Pinot to Kubernetes](#deploying-pinot-to-kubernetes)
-- [Join the Community](#join-the-community)
-- [Documentation](#documentation)
-- [License](#license)
+## What isn't it? (limitations)
 
-# What is Apache Pinot?
+ThirdEye maintains a dedicated meta-data store to capture data sources, anomalies, and relationships between entities but does not store raw time series data. It relies on systems such as Pinot, Presto, MySQL, RocksDB, and Kafka to obtain both realtime and historic time series data.
 
-[Apache Pinot](https://pinot.apache.org) (incubating) is a real-time distributed OLAP datastore, built to deliver scalable real-time analytics with low latency. It can ingest from batch data sources (such as Hadoop HDFS, Amazon S3, Azure ADLS, Google Cloud Storage) as well as stream data sources (such as Apache Kafka).
+ThirdEye does not replace your issue tracker - it integrates with it. ThirdEye supports collaboration but focuses on the data-integration aspect of anomaly detection and root-cause analysis. After all, your organization probably already has a well-oiled issue resolution process that we don't want to disrupt.
 
-Pinot was built by engineers at LinkedIn and Uber and is designed to scale up and out with no upper bound. Performance always remains constant based on the size of your cluster and an expected query per second (QPS) threshold.
+ThirdEye is not a generic dashboard builder toolkit. ThirdEye attempts to bring overview data from different sources into one single place on-demand. In-depth data about events, such as A/B experiments and deployments, should be kept in their respective systems. ThirdEye can link to these directly.
 
-For getting started guides, deployment recipes, tutorials, and more, please visit our project documentation at [https://docs.pinot.apache.org](https://docs.pinot.apache.org).
-
-<img src="https://gblobscdn.gitbook.com/assets%2F-LtH6nl58DdnZnelPdTc%2F-M69C48fK2BhCoou1REr%2F-M69DbDfcATcZOAgyX7k%2Fpinot-overview-graphic.png?alt=media&token=3552722e-8d1d-4397-972e-a81917ced182" align="center" alt="Apache Pinot"/>
-
-## Features
-
-Pinot was originally built at LinkedIn to power rich interactive real-time analytic applications such as [Who Viewed Profile](https://www.linkedin.com/me/profile-views/urn:li:wvmp:summary/),  [Company Analytics](https://www.linkedin.com/company/linkedin/insights/),  [Talent Insights](https://business.linkedin.com/talent-solutions/talent-insights), and many more. [UberEats Restaurant Manager](https://eng.uber.com/restaurant-manager/) is another example of a customer facing Analytics App. At LinkedIn, Pinot powers 50+ user-facing products, ingesting millions of events per second and serving 100k+ queries per second at millisecond latency.
-
-* **Column-oriented**: a column-oriented database with various compression schemes such as Run Length, Fixed Bit Length.
-
-* [**Pluggable indexing**](https://docs.pinot.apache.org/basics/indexing): pluggable indexing technologies Sorted Index, Bitmap Index, Inverted Index.
-
-* **Query optimization**: ability to optimize query/execution plan based on query and segment metadata.
-
-* **Stream and batch ingest**: near real time ingestion from streams and batch ingestion from Hadoop.
-
-* **Query with SQL:** SQL-like language that supports selection, aggregation, filtering, group by, order by, distinct queries on data.
-
-* **Upsert during real-time ingestion**: update the data at-scale with consistency
-
-* **Multi-valued fields:** support for multi-valued fields, allowing you to query fields as comma separated values.
-
-* **Cloud-native on Kubernetes**: Helm chart provides a horizontally scalable and fault-tolerant clustered deployment that is easy to manage using Kubernetes.
-
-<a href="https://docs.pinot.apache.org/basics/getting-started"><img src="https://gblobscdn.gitbook.com/assets%2F-LtH6nl58DdnZnelPdTc%2F-MKaPf2qveUt5cg0dMbM%2F-MKaPmS1fuBs2CHnx9-Z%2Fpinot-ui-width-1000.gif?alt=media&token=53e4c5a8-a9cd-4610-a338-d54ea036c090" align="center" alt="Apache Pinot query console"/></a>
-
-## When should I use Pinot?
-
-Pinot is designed to execute real-time OLAP queries with low latency on massive amounts of data and events. In addition to real-time stream ingestion, Pinot also supports batch use cases with the same low latency guarantees. It is suited in contexts where fast analytics, such as aggregations, are needed on immutable data, possibly, with real-time data ingestion. Pinot works very well for querying time series data with lots of dimensions and metrics.
-
-Example query:
-```SQL
-SELECT sum(clicks), sum(impressions) FROM AdAnalyticsTable
-  WHERE
-       ((daysSinceEpoch >= 17849 AND daysSinceEpoch <= 17856)) AND
-       accountId IN (123456789)
-  GROUP BY
-       daysSinceEpoch TOP 100
-```
-
-Pinot is not a replacement for database i.e it cannot be used as source of truth store, cannot mutate data. While Pinot [supports text search](https://docs.pinot.apache.org/basics/features/text-search-support), it's not a replacement for a search engine. Also, Pinot queries cannot span across multiple tables by default. You can use the [Presto-Pinot connector](https://prestodb.io/docs/current/connector/pinot.html) to achieve table joins and other features.
-
-## Building Pinot
-More detailed instructions can be found at [Quick Demo](https://docs.pinot.apache.org/getting-started) section in the documentation.
-```
-# Clone a repo
-$ git clone https://github.com/apache/incubator-pinot.git
-$ cd incubator-pinot
-
-# Build Pinot
-$ mvn clean install -DskipTests -Pbin-dist
-
-# Run the Quick Demo
-$ cd pinot-distribution/target/apache-pinot-incubating-<version>-SNAPSHOT-bin/apache-pinot-incubating-<version>-SNAPSHOT-bin
-$ bin/quick-start-batch.sh
-```
-
-## Deploying Pinot to Kubernetes
-Please refer to [Running Pinot on Kubernetes](https://docs.pinot.apache.org/basics/getting-started/kubernetes-quickstart) in our project documentation. Pinot also provides Kubernetes integrations with the interactive query engine, [Presto](kubernetes/helm/presto-coordinator.yaml), and the data visualization tool, [Apache Superset](kubernetes/helm/superset.yaml).
-
-## Join the Community
- - Ask questions on [Apache Pinot Slack](https://communityinviter.com/apps/apache-pinot/apache-pinot)
- - Please join Apache Pinot mailing lists  
-   dev-subscribe@pinot.apache.org (subscribe to pinot-dev mailing list)  
-   dev@pinot.apache.org (posting to pinot-dev mailing list)  
-   users-subscribe@pinot.apache.org (subscribe to pinot-user mailing list)  
-   users@pinot.apache.org (posting to pinot-user mailing list)
- - Apache Pinot Meetup Group: https://www.meetup.com/apache-pinot/
+## Getting Involved
+ 
+ - Ask questions on [Apache ThirdEye Slack](https://communityinviter.com/apps/apache-thirdeye/apache-thirdeye)
 
 ## Documentation
-Check out [Pinot documentation](https://docs.pinot.apache.org/) for a complete description of Pinot's features.
-- [Quick Demo](https://docs.pinot.apache.org/getting-started/running-pinot-locally)
-- [Pinot Architecture](https://docs.pinot.apache.org/basics/architecture)
-- [Pinot Query Language](https://docs.pinot.apache.org/users/user-guide-query/pinot-query-language)
 
-## License
-Apache Pinot is under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Detailed documentation can be found at [ThirdEye documentation](https://thirdeye.readthedocs.io) for a complete description of ThirdEye's features.
+
+- [Quick Start](https://thirdeye.readthedocs.io/en/latest/quick_start.html)
+- [Data Sources Setup](https://thirdeye.readthedocs.io/en/latest/datasources.html)
+- [Production Settings](https://thirdeye.readthedocs.io/en/latest/production.html)
+- [Alert Setup](https://thirdeye.readthedocs.io/en/latest/alert_setup.html)
