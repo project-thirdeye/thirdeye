@@ -21,7 +21,6 @@
 if [ -n "${DEPLOY_BUILD_OPTS}" ]; then
   echo "Deploying ThirdEye to bintray"
   # Generate new version number
-  cd thirdeye/
   BUILD_VERSION=$(grep -E "<revision>(.*)</revision>" pom.xml | cut -d'>' -f2 | cut -d'<' -f1)
   echo "Current build version: $BUILD_VERSION${DEV_VERSION}"
   mvn versions:set -DnewVersion="$BUILD_VERSION${DEV_VERSION}" -q -B

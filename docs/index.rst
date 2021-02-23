@@ -17,49 +17,17 @@
 .. under the License.
 ..
 
-.. Pinot documentation master file, created by
-   sphinx-quickstart on Fri Feb  9 14:54:43 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-.. warning::  The documentation is not up-to-date and has moved to `Apache Pinot Docs <https://docs.pinot.apache.org/>`_.
-
-#####
-Pinot
-#####
+########
+ThirdEye
+########
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Introduction
+   :maxdepth: 2
 
-   intro
-   architecture
-   getting_started
-
-.. toctree::
-   :maxdepth: 1
-   :caption: User Guide
-
-   pql_examples
-   client_api
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Admin Guide
-
-   tableconfig_schema
-   schema
-   in_production
-   batch_data_ingestion
-   pinot_hadoop
-   customizations
-   tuning_pinot
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Developer Guide 
-
-   dev_env
-   code_modules
-   contribution_guidelines
-   extensions
+   introduction
+   configuration
+   datasources
+   caches
+   alert_setup
+   thirdeye_architecture
+   thirdeye_ui_mocks

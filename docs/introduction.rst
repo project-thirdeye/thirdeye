@@ -17,19 +17,13 @@
 .. under the License.
 ..
 
-.. warning::  The documentation is not up-to-date and has moved to `Apache Pinot Docs <https://docs.pinot.apache.org/>`_.
-
-:orphan:
-
-############
 Introduction
 ############
-
-.. _introduction:
 
 .. toctree::
     :maxdepth: 1
 
-    intro
-    architecture
+    about
+    quick_start
     getting_started
+    application

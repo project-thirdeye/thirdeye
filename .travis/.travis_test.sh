@@ -18,60 +18,14 @@
 # under the License.
 #
 
-# ThirdEye related changes
-git diff --name-only $TRAVIS_COMMIT_RANGE | egrep '^(thirdeye)'
-if [ $? -eq 0 ]; then
-  echo 'ThirdEye changes.'
-
-  if [ "$TRAVIS_JDK_VERSION" != 'oraclejdk8' ]; then
-    echo 'Skip ThirdEye tests for version other than oracle jdk8.'
-    exit 0
-  fi
-
-  if [ "RUN_INTEGRATION_TESTS" == 'false' ]; then
-    echo 'Skip ThirdEye tests when integration tests off'
-    exit 0
-  fi
-
-  cd thirdeye
-  mvn test -B ${DEPLOY_BUILD_OPTS}
-  failed=$?
-  if [ $failed -eq 0 ]; then
-    exit 0
-  else
-    exit 1
-  fi
-fi
-
-# Only run tests for JDK 8
 if [ "$TRAVIS_JDK_VERSION" != 'oraclejdk8' ]; then
-  echo 'Skip tests for version other than oracle jdk8.'
+  echo 'Skip ThirdEye tests for version other than oracle jdk8.'
   exit 0
 fi
 
-passed=0
-
-KAFKA_BUILD_OPTS=""
-if [ "$KAFKA_VERSION" != '2.0' ] && [ "$KAFKA_VERSION" != '' ]; then
-  KAFKA_BUILD_OPTS="-Dkafka.version=${KAFKA_VERSION}"
-fi
-
-# Only run integration tests if needed
-if [ "$RUN_INTEGRATION_TESTS" != 'false' ]; then
-  mvn test -B -P travis,integration-tests-only ${DEPLOY_BUILD_OPTS} ${KAFKA_BUILD_OPTS}
-  if [ $? -eq 0 ]; then
-    passed=1
-  fi
-else
-  mvn test -B -P travis,no-integration-tests ${DEPLOY_BUILD_OPTS} ${KAFKA_BUILD_OPTS}
-  if [ $? -eq 0 ]; then
-    passed=1
-  fi
-fi
-
-if [ $passed -eq 1 ]; then
-  # Only send code coverage data if passed
-  bash <(cat .codecov_bash)
+mvn test -B ${DEPLOY_BUILD_OPTS}
+failed=$?
+if [ $failed -eq 0 ]; then
   exit 0
 else
   exit 1
