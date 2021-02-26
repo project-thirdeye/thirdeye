@@ -21,8 +21,4 @@
 # Java version
 java -version
 
-cd thirdeye-hadoop
-mvn clean compile -B -DskipTests ${DEPLOY_BUILD_OPTS}
-cd ..
-cd thirdeye-pinot
 mvn clean compile -B -DskipTests ${DEPLOY_BUILD_OPTS}

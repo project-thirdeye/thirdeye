@@ -25,12 +25,12 @@ name: Artifact Publish Test Workflow
 on:
   schedule:
   - cron: "0 17 * * 1-5"
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -39,5 +39,4 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        cd thirdeye
         mvn -T 1C clean compile package
