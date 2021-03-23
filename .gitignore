@@ -13,3 +13,4 @@ test-output/
 *.log
 *.swp
 docs/_build
+thirdeye-dashboard/config/h2db.trace.db
