@@ -27,6 +27,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pinot.thirdeye.auto.onboard.AutoOnboardPinotMetadataSource;
 import org.apache.pinot.thirdeye.datasource.MetadataSourceConfig;
+import org.apache.pinot.thirdeye.util.CustomConfigReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,13 +213,15 @@ public class PinotThirdEyeDataSourceConfig {
           "{} accepts only 'http' or 'https' connection schemes", className);
 
       PinotThirdEyeDataSourceConfig config = new PinotThirdEyeDataSourceConfig();
-      config.setControllerHost(controllerHost);
+      // Read from the custom config reader for reading from environment variables
+      CustomConfigReader ccr = new CustomConfigReader();
+      config.setControllerHost(ccr.readEnv(controllerHost));
       config.setControllerPort(controllerPort);
-      config.setZookeeperUrl(zookeeperUrl);
-      config.setClusterName(clusterName);
-      config.setBrokerUrl(brokerUrl);
-      config.setTag(tag);
-      config.setControllerConnectionScheme(controllerConnectionScheme);
+      config.setZookeeperUrl(ccr.readEnv(zookeeperUrl));
+      config.setClusterName(ccr.readEnv(clusterName));
+      config.setBrokerUrl(ccr.readEnv(brokerUrl));
+      config.setTag(ccr.readEnv(tag));
+      config.setControllerConnectionScheme(ccr.readEnv(controllerConnectionScheme));
       config.setName(name);
       return config;
     }
