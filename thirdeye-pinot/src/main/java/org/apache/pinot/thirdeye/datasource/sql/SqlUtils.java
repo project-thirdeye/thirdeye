@@ -26,9 +26,12 @@ import com.google.common.collect.Multimap;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +39,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.TimeZone;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pinot.thirdeye.common.time.TimeGranularity;
@@ -89,6 +93,11 @@ public class SqlUtils {
   private static final String H2 = "H2";
   private static final String VERTICA = "Vertica";
   private static final String BIGQUERY = "BigQuery";
+  private static final String POSTGRESQL = "PostgreSQL";
+  private static final String DRUID = "Druid";
+
+  // For druid, set the default timezone to UTC
+  private static final String DRUID_TIMEZONE = "UTC";
 
   /**
    * Insert a table to SQL database, currently only used by H2, that can be read by ThirdEye
@@ -265,7 +274,8 @@ public class SqlUtils {
     }
 
     if (limit > 0 ){
-      sb.append(" ORDER BY " + getSelectMetricClause(metricConfig, metricFunction) + " DESC");
+      //sb.append(" ORDER BY " + getSelectMetricClause(metricConfig, metricFunction) + " DESC");
+      sb.append(" ORDER BY " + getSelectMetricClauseName(metricConfig, metricFunction) + " DESC");
     }
 
     limit = limit > 0 ? limit : DEFAULT_LIMIT;
@@ -313,6 +323,20 @@ public class SqlUtils {
       metricName = metricConfig.getName();
     }
     builder.append(convertAggFunction(metricFunction.getFunctionName())).append("(").append(metricName).append(")");
+    // This seems like a new call. Remove if errors out
+    builder.append(" AS ").append(getSelectMetricClauseName(metricConfig, metricFunction)); 
+    return builder.toString();
+  }
+
+  private static String getSelectMetricClauseName(MetricConfigDTO metricConfig, MetricFunction metricFunction) {
+    StringBuilder builder = new StringBuilder();
+    String metricName = null;
+    if (metricFunction.getMetricName().equals("*")) {
+      metricName = "all_star";
+    } else {
+      metricName = metricConfig.getName();
+    }
+    builder.append(convertAggFunction(metricFunction.getFunctionName())).append("_").append(metricName);
     return builder.toString();
   }
 
@@ -330,6 +354,13 @@ public class SqlUtils {
 
     // epoch case
     if (TimeSpec.SINCE_EPOCH_FORMAT.equals(timeFormat)) {
+      if (sourceName.equals(POSTGRESQL)) {
+        // long startTime = (long) Math.ceil(start.getMillis()) / 1000;
+        // long endTime = (long) Math.ceil(endExclusive.getMillis()) / 1000;
+        // return String.format("%s BETWEEN %d AND %d", getToUnixTimeClause(timeFormat, timeField, sourceName), startTime, endTime);
+        // Taking dataGranularity as SECONDS for datasetconfig to work
+        dataGranularityMillis = 1000;
+      }
       long startUnits = (long) Math.ceil(start.getMillis() / (double) dataGranularityMillis);
       long endUnits = (long) Math.ceil(endExclusive.getMillis() / (double) dataGranularityMillis);
 
@@ -349,7 +380,26 @@ public class SqlUtils {
     if (Objects.equals(startUnits, endUnits)) {
       return String.format(" %s = %d", getToUnixTimeClause(timeFormat, timeField, sourceName), startUnits);
     }
+    // This is an explicit DRUID Hack
+    if (sourceName.equals(DRUID)) {
+      String startTime = getDruidTimeStamp((long)Math.ceil(start.getMillis()));
+      String endTime = getDruidTimeStamp((long)Math.ceil(endExclusive.getMillis()));
+      return String.format("%s BETWEEN '%s' AND '%s'", getToUnixTimeClause(timeFormat, timeField, sourceName), startTime, endTime);
+    }
+
     return String.format(" %s BETWEEN %d AND %d", getToUnixTimeClause(timeFormat, timeField, sourceName), startUnits, endUnits);
+  }
+
+  /**
+   * For druid performance. We need to remove the TIME_EXTRACT and actually pass the actual date time strings
+   * @param timeInMilliSeconds start time of where clause in milliseconds
+   * @return formatted date time string
+   */
+  private static String getDruidTimeStamp(long timeInMilliSeconds) {
+    Date date = new Date(timeInMilliSeconds);
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    format.setTimeZone(TimeZone.getTimeZone(DRUID_TIMEZONE));
+    return format.format(date);
   }
 
   /**
@@ -580,6 +630,40 @@ public class SqlUtils {
     }
   }
 
+  /**
+   * Convert java SimpleDateFormat to PostgreSQL's format
+   * Currently this isn't used and kept here for compatibility
+   * in case we want to extend postgres timestamp support beyond epoch
+   *
+   * @param timeFormat
+   * @return Postgres's time format
+   */
+  private static String timeFormatToPostgreSQLFormat(String timeFormat) {
+    if (timeFormat.contains("mm")) {
+      timeFormat = timeFormat.replaceAll("(?i):mm", ":mi");
+    }
+
+    if (timeFormat == "yyyy-MM-dd hh:mm:ss") {
+      timeFormat = "yyyy-MM-dd HH:mm:ss";
+    }
+
+    // in postgres HH is 12 hour format and in Java it's 24 hour format, convert it
+    if (timeFormat.contains("HH")) {
+      timeFormat = timeFormat.replaceAll("HH", "HH24");
+    }
+    return timeFormat;
+  }
+
+  /**
+   * Convert java SimpleDateFormat to Druid's format
+   *
+   * @param timeFormat
+   * @return MySQL's time format
+   */
+  private static String timeFormatToDruidFormat(String timeFormat) {
+    return "EPOCH";
+  }
+
   private static String timeFormatToVerticaFormat(String timeFormat) {
     if (timeFormat.contains("mm")) {
       return timeFormat.replaceAll("(?i):mm", ":mi");
@@ -621,6 +705,12 @@ public class SqlUtils {
       return "TO_UNIXTIME(PARSE_DATETIME(CAST(" + timeColumn + " AS VARCHAR), '" + timeFormat + "'))";
     } else if (sourceName.equals(MYSQL)) {
       return "UNIX_TIMESTAMP(STR_TO_DATE(CAST(" + timeColumn + " AS CHAR), '" + timeFormatToMySQLFormat(timeFormat) + "'))";
+    } else if (sourceName.equals(POSTGRESQL)) {
+      return timeColumn;
+      //return "EXTRACT(EPOCH FROM to_timestamp(" + timeColumn + ", '" + timeFormatToPostgreSQLFormat(timeFormat) + "'))";
+    } else if (sourceName.equals(DRUID)) {
+      //return "TIME_EXTRACT(" + timeColumn + ", '" + timeFormatToDruidFormat(timeFormat) + "') ";
+      return timeColumn;
     } else if (sourceName.equals(H2)){
       return "TO_UNIXTIME(PARSEDATETIME(CAST(" + timeColumn + " AS VARCHAR), '" + timeFormat + "'))";
     } else if (sourceName.equals(VERTICA)) {
