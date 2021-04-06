@@ -171,6 +171,16 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.14</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.calcite.avatica</groupId>
+      <artifactId>avatica-core</artifactId>
+      <version>1.15.0</version>
+    </dependency> 
 
     <!-- TODO: restructure this -->
     <dependency>
@@ -326,6 +336,12 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
+  </dependency>
+    <!-- https://mvnrepository.com/artifact/com.slack.api/slack-api-client -->
+    <dependency>
+      <groupId>com.slack.api</groupId>
+      <artifactId>slack-api-client</artifactId>
+      <version>1.2.1</version>
     </dependency>
 
     <!-- yaml validator -->
