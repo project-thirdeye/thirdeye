@@ -26,6 +26,7 @@ public class ThirdEyeCredentials {
   String principal;
   String password;
   String token;
+  String code;
 
   ThirdEyeCredentials(String principal, String password) {
     this.principal = principal;
@@ -33,6 +34,10 @@ public class ThirdEyeCredentials {
   }
 
   public ThirdEyeCredentials() {
+  }
+
+  public String getCode() {
+      return code;
   }
 
   public String getPrincipal() {
@@ -45,6 +50,10 @@ public class ThirdEyeCredentials {
 
   public String getPassword() {
     return password;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
   }
 
   public void setPassword(String password) {

@@ -1,7 +1,9 @@
-import { inject as service } from '@ember/service';
-import Controller from '@ember/controller';
-import { get } from '@ember/object';
-import _ from 'lodash';
+/* eslint-disable no-console */
+import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
+import { get } from "@ember/object";
+import _ from "lodash";
+import { getOwner } from "@ember/application";
 
 export default Controller.extend({
   errorMessage: null,
@@ -14,14 +16,20 @@ export default Controller.extend({
    * @param {Objecgt} session the current session
    */
   _makeTransition(fromUrl = null, session) {
-    const sessionFromUrl = get(session, 'store.fromUrl');
-    const lastIntentTransition = sessionFromUrl && sessionFromUrl.lastIntentTransition ? sessionFromUrl.lastIntentTransition.intent : null;
+    const sessionFromUrl = get(session, "store.fromUrl");
+    const lastIntentTransition =
+      sessionFromUrl && sessionFromUrl.lastIntentTransition
+        ? sessionFromUrl.lastIntentTransition.intent
+        : null;
     const name = lastIntentTransition ? lastIntentTransition.name : null;
-    const deepLink = sessionFromUrl && sessionFromUrl.deeplink ? sessionFromUrl.deeplink : fromUrl;
+    const deepLink =
+      sessionFromUrl && sessionFromUrl.deeplink
+        ? sessionFromUrl.deeplink
+        : fromUrl;
     if (deepLink) {
       const origin = window.location.origin;
       // reset the session store fromUrl
-      this.set('session.store.fromUrl', null);
+      this.set("session.store.fromUrl", null);
       // check for unique links or external links and route accordingly
       if (deepLink.indexOf(origin) > -1) {
         window.location.replace(deepLink);
@@ -32,11 +40,15 @@ export default Controller.extend({
       const queryParams = lastIntentTransition.queryParams;
       const contexts = lastIntentTransition.contexts;
       if (contexts && contexts[0] && !_.isEmpty(queryParams)) {
-        this.transitionToRoute(name, contexts[0], { queryParams });
+        this.transitionToRoute(name, contexts[0], {
+          queryParams,
+        });
       } else if (contexts && contexts[0] && _.isEmpty(queryParams)) {
         this.transitionToRoute(name, contexts[0]);
       } else if (contexts && !_.isEmpty(queryParams)) {
-        this.transitionToRoute(name, { queryParams });
+        this.transitionToRoute(name, {
+          queryParams,
+        });
       } else {
         this.transitionToRoute(name);
       }
@@ -52,24 +64,39 @@ export default Controller.extend({
      * @returns {undefiend}
      */
     onLogin(credentials) {
-      const fromUrl = this.get('fromUrl');
-      const session = get(this, 'session');
-      const errorMsg = get(session, 'store.errorMsg');
-
+      const fromUrl = this.get("fromUrl");
+      const session = get(this, "session");
+      const errorMsg = get(session, "store.errorMsg");
       // reset the messages locally and in the session's store
-      this.set('errorMessage', null);
-      this.set('session.store.errorMsg', null);
+      this.set("errorMessage", null);
+      this.set("session.store.errorMsg", null);
 
-      session.authenticate('authenticator:custom-ldap', credentials)
-        .then(() => {
+      session
+        .authenticate("authenticator:custom-ldap", credentials)
+        .then((response) => {
           this._makeTransition(fromUrl, session);
         })
-        .catch(({ responseText = 'Bad Credentials' }) => {
+        .catch(({ responseText = "Bad Credentials" }) => {
           if (errorMsg) {
-            this.set('errorMessage', errorMsg);
+            this.set("errorMessage", errorMsg);
           } else {
-            this.set('errorMessage', responseText);
+            this.set("errorMessage", responseText);
           }
+        });
+    },
+    onGoogleLogin() {
+      console.log("Google Login request");
+      this.session
+        .authenticate("authenticator:torii", "google-oauth2")
+        .then(() => {
+          let authenticated = this.get("session.data.authenticated");
+          getOwner(this)
+            .lookup("authenticator:torii")
+            .trigger("sessionDataUpdated", authenticated);
+          this.set("session.store.cookieExpirationTime", 60 * 60 * 24 * 7);
+        })
+        .catch((error) => {
+          console.error("Goolge Login error:", error);
         });
     }
   }

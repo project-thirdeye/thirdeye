@@ -20,6 +20,8 @@
 package org.apache.pinot.thirdeye.dashboard.resources.v2;
 
 import static org.apache.pinot.thirdeye.auth.ThirdEyeAuthFilter.AUTH_TOKEN_NAME;
+
+import java.io.IOException;
 import java.util.Optional;
 import org.apache.pinot.thirdeye.auth.ThirdEyeAuthFilter;
 import org.apache.pinot.thirdeye.auth.ThirdEyeCredentials;
@@ -32,19 +34,30 @@ import org.apache.pinot.thirdeye.datasource.DAORegistry;
 import io.dropwizard.auth.Authenticator;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import org.apache.commons.codec.digest.DigestUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
+import io.dropwizard.auth.Authenticator;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -102,11 +115,19 @@ public class AuthResource {
 
       final ThirdEyePrincipal principal = optPrincipal.get();
 
-      String sessionKey = generateSessionKey(principal.getName());
       SessionDTO sessionDTO = new SessionDTO();
+      // principal.getName() will get userId for google, sessionkey is userId
+      String userNameOrID = principal.getName()
+      sessionDTO.setPrincipal(userNameOrID);
+      String sessionKey = generateSessionKey(principal.getName()); 
       sessionDTO.setSessionKey(sessionKey);
       sessionDTO.setPrincipalType(SessionBean.PrincipalType.USER);
-      sessionDTO.setPrincipal(principal.getName());
+      if (principal.getEmailId() != null {
+	String email = principal.getEmailId();
+	sessionDTO.setPrincipal(email);
+	sessionDTO.setEmailId(principal.getEmailId());
+      }
+      //sessionDTO.setPrincipal(principal.getName());
       sessionDTO.setExpirationTime(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24));
       this.sessionDAO.save(sessionDTO);
 

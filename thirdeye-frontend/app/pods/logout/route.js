@@ -13,5 +13,5 @@ export default Route.extend(AuthenticatedRouteMixin, {
   beforeModel() {
     this._super(...arguments);
     this.get('session').invalidate();
-  }
+  },
 });

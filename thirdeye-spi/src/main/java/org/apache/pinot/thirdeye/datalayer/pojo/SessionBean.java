@@ -36,13 +36,23 @@ public class SessionBean extends AbstractBean {
 
   public enum PrincipalType {
     SERVICE,
-    USER
+    USER,
+    USERID
   }
 
   String sessionKey;
   String principal;
   PrincipalType principalType;
   long expirationTime;
+  String emailId;
+
+  public String getEmailId() {
+    return emailId;
+  }
+
+  public void setEmailId(String emailId) {
+      this.emailId = emailId;
+  }
 
   public String getSessionKey() {
     return sessionKey;

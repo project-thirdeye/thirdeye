@@ -19,6 +19,9 @@ export default Component.extend({
         password: this.get('password')
       };
       this.onLogin(credentials);
-    }
-  }
+    },
+  onGoogleLogin() {
+      this.onGoogleLogin();
+  },
+  },
 });

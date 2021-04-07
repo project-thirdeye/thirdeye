@@ -1,3 +1,16 @@
+{{!-- {{#if process.env.ENABLE_GOOGLE_AUTH}} --}}
+<button type="submit" form="login-form" value="submit" {{action "onGoogleLogin"}} class="btn btn-outline-light"
+  style="padding:8px; font-size:15px;text-transform:none">
+  <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in"
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+  Login with Google
+</button>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+{{!-- {{else}}
 <form id="login-form">
   {{input
   value=username
@@ -5,16 +18,17 @@
   placeholder="Username"
   id="login-username"}}
 
-{{input
+  {{input
   value=password
   class="nacho-login-form__input"
   placeholder="Password"
   id="login-password"
   type="password"}}
 
-<p class="nacho-login__login-error">{{if errorMessage errorMessage}}</p>
+  <p class="nacho-login__login-error">{{if errorMessage errorMessage}}</p>
 
-<button type="submit" form="login-form" value="submit" {{action "_onLogin"}} class="nacho-login-button">
-  Login
-</button>
+  <button type="submit" form="login-form" value="submit" {{action "onLogin"}} class="nacho-login-button">
+    Login
+  </button>
 </form>
+{{/if}} --}}

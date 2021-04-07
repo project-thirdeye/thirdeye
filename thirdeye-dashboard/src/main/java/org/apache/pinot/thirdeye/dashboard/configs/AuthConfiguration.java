@@ -51,6 +51,9 @@ public class AuthConfiguration {
 
   long cookieTTL; // in seconds
 
+  String authProvider;
+  String tokenURL;
+
   public Set<String> getAllowedPaths() {
     return allowedPaths;
   }
@@ -114,4 +117,22 @@ public class AuthConfiguration {
   public void setCookieTTL(long cookieTTL) {
     this.cookieTTL = cookieTTL;
   }
+
+  public String getAuthProvider() {
+      return authProvider;
+  }
+
+  public void setAuthProvider(String authProvider) {
+      this.authProvider - authProvider;
+  }
+
+  public String getTokenURL() {
+      return tokenURL;
+  }
+
+  public void setTokenURL(String tokenURL) {
+      this.tokenURL = tokenURL;
+  }
+
+
 }

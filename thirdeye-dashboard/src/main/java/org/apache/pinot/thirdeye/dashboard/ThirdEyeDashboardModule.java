@@ -29,12 +29,16 @@ import com.google.inject.Singleton;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.CachingAuthenticator;
 import io.dropwizard.setup.Environment;
+
+import java.util.HashMap;
+import java.util.concurrentExecutors;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.apache.pinot.thirdeye.auth.ThirdEyeAuthFilter;
 import org.apache.pinot.thirdeye.auth.ThirdEyeAuthenticatorDisabled;
 import org.apache.pinot.thirdeye.auth.ThirdEyeCredentials;
 import org.apache.pinot.thirdeye.auth.ThirdEyeLdapAuthenticator;
+import org.apache.pinot.thirdeye.auth.ThirdEyeGoogleAuthenticator;
 import org.apache.pinot.thirdeye.auth.ThirdEyePrincipal;
 import org.apache.pinot.thirdeye.common.ThirdEyeConfiguration;
 import org.apache.pinot.thirdeye.dashboard.configs.AuthConfiguration;
@@ -64,6 +68,8 @@ import org.apache.pinot.thirdeye.detection.yaml.YamlResource;
 import org.apache.pinot.thirdeye.detector.email.filter.AlertFilterFactory;
 import org.apache.pinot.thirdeye.detector.function.AnomalyFunctionFactory;
 import org.apache.pinot.thirdeye.model.download.ModelDownloaderManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the main Guice module for ThirdEye Dashboard Server.
@@ -190,15 +196,36 @@ public class ThirdEyeDashboardModule extends AbstractModule {
 
     // ldap authenticator
     if (authConfig.isAuthEnabled()) {
-      final ThirdEyeLdapAuthenticator
+      LOG.info("Authenticating via '{}'", authProvider);
+      switch(authProvider) {
+      case "google":
+        HashMap<String, String> configMap = new HashMap<String, String>();
+        configMap.put("tokenURL", authConfig.getTokenURL());
+        configMap.put("clientId", System.getenv("GOOGLE_CLIENT_ID"));
+        configMap.put("clientSecret", System.getenv("GOOGLE_CLIENT_SECRET"));
+        configMap.put("redirectURL", System.getenv("GOOGLE_AUTH_REDIRECT_URL"));
+        final ThirdEyeGoogleAuthenticator 
+            authenticatorGoogle = new ThirdEyeGoogleAuthenticator(
+                sessionManager, 
+                configMap);
+        authenticator = new CachingAuthenticator<>(
+                metricRegistry, 
+                authenticatorGoogle,
+                Caffeine.newBuilder().expireAfterWrite(authConfig.getCacheTTL(), TimeUnit.SECONDS));
+        break;
+      case "ldap":
+        final ThirdEyeLdapAuthenticator
           authenticatorLdap = new ThirdEyeLdapAuthenticator(
           authConfig.getDomainSuffix(),
           authConfig.getLdapUrl(),
           sessionManager);
-      authenticator = new CachingAuthenticator<>(
+        authenticator = new CachingAuthenticator<>(
           metricRegistry,
           authenticatorLdap,
           Caffeine.newBuilder().expireAfterWrite(authConfig.getCacheTTL(), TimeUnit.SECONDS));
+      default:
+        LOG.info("Invalid auth provider or provider not configured in dashboard.yml. '{}'", authProvider);
+      }
     }
     return authenticator;
   }

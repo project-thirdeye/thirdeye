@@ -2,6 +2,7 @@
 'use strict';
 
 module.exports = function(environment) {
+  const DEP_MODE = process.env.DEP_MODE;
 
   let ENV = {
 
@@ -45,7 +46,20 @@ module.exports = function(environment) {
       createAlert: "/link/to/create/alert/wiki",
       detectionConfig: "/link/to/DetectionConfiguration/wiki",
       subscriptionConfig: "/link/to/NotificationConfiguration/wiki",
-      cubeWiki: "/link/to/cubeAlgorithm/wiki"
+      cubeWiki: "/link/to/cubeAlgorithm/wiki",
+    },
+
+    torii: {
+      sessionServiceName: "session",
+      allowUnsafeRedirect: true,
+      providers: {
+        "google-oauth2": {
+          apiKey:
+            "google-apikey",
+          redirectUri: "thirdeye-redirecturl",
+          scope: "email profile"
+        },
+     },
     },
 
     // used to split username if needed.
@@ -74,6 +88,16 @@ module.exports = function(environment) {
     }
   };
 
+  // TODO: Fix the api key to be loaded from environment secrets and not from here
+  if (DEP_MODE === "prod"){
+    ENV.torii.providers["google-oauth2"].apiKey="1007721360592-7e4kc7ohjtrtqb24hecstad3bcqbolnn.apps.googleusercontent.com";
+    ENV.torii.providers["google-oauth2"].redirectUri="https://thirdeye.razorpay.com";
+  }
+
+  if (DEP_MODE === "stage"){
+    ENV.torii.providers["google-oauth2"].apiKey="391316638671-qbubq6ip7icqovomv38fpdh4jkbm2c93.apps.googleusercontent.com";
+    ENV.torii.providers["google-oauth2"].redirectUri="https://thirdeye.concierge.stage.razorpay.in";
+  }
   if (environment === 'development') {
     ENV.rootURL = '/';
     ENV['ember-simple-auth'] = {

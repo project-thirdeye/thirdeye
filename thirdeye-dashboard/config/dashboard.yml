@@ -1,10 +1,12 @@
 authConfig:
-  authEnabled: false
+  authEnabled: true
   authKey: ""
   ldapUrl: ""
   domainSuffix: []
   cacheTTL: 3600
   cookieTTL: 604800
+  authProvider: google # others can be ldap, azure
+  tokenURL: "https://oauth2.googleapis.com/token"
 resourceConfig: []
 rootCause:
   definitionsPath: rca.yml
