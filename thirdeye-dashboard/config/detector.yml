@@ -13,22 +13,24 @@ server:
       port: 1868
   requestLog:
     type: external
-alert: false
-autoload: false
+alert: true
+autoload: true
 holidayEventsLoader: false
-mockEventsLoader: true
+mockEventsLoader: false
 monitor: false
 pinotProxy: false
-scheduler: false
-worker: false
-detectionPipeline: false
-detectionAlert: false
+scheduler: true
+worker: true
+detectionPipeline: true
+detectionAlert: true
 dashboardHost: "http://localhost:1426"
 id: 0
 alerterConfiguration:
   smtpConfiguration:
     smtpHost: "localhost"
     smtpPort: 25
+  slackConfiguration:
+    defaultChannel: "#alerts"
 #  jiraConfiguration:
 #    jiraUser: <REPLACE_ME>
 #    jiraPassword: <REPLACE_ME>

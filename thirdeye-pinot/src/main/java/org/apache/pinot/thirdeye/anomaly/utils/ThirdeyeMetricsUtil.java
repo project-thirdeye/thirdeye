@@ -196,7 +196,14 @@ public class ThirdeyeMetricsUtil {
 
   public static final Counter jiraAlertsNumCommentsCounter =
       metricsRegistry.newCounter(ThirdeyeMetricsUtil.class, "jiraAlertsNumCommentsCounter");
-
+  public static final Counter slackAlertsSuccessCounter =
+      metricsRegistry.newCounter(ThirdeyeMetricsUtil.class, "slackAlertsSuccessCounter");
+  
+  public static final Counter slackAlertsFailedCounter =
+      metricsRegistry.newCounter(ThirdeyeMetricsUtil.class, "slackAlertsFailedCounter");
+ 
+  public static final Counter slackAlertsNumMessageCounter =
+     metricsRegistry.newCounter(ThirdeyeMetricsUtil.class, "slackAlertsNumMessageCounter");
   public static final Counter onlineTaskCounter =
           metricsRegistry.newCounter(ThirdeyeMetricsUtil.class, "onlineTaskCounter");
 

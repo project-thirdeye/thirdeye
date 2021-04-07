@@ -88,6 +88,7 @@ public abstract class BaseNotificationContent implements NotificationContent {
   private static final String DEFAULT_INCLUDE_SUMMARY = "false";
   private static final String DEFAULT_DATE_PATTERN = "MMM dd, HH:mm";
   private static final String DEFAULT_TIME_ZONE = "America/Los_Angeles";
+  private static final String IST = "Asia/Calcutta";
   private static final String DEFAULT_EVENT_CRAWL_OFFSET = "P2D";
 
   protected static final String EVENT_FILTER_COUNTRY = "countryCode";
@@ -113,7 +114,7 @@ public abstract class BaseNotificationContent implements NotificationContent {
         properties.getProperty(INCLUDE_SENT_ANOMALY_ONLY, DEFAULT_INCLUDE_SENT_ANOMALY_ONLY));
     this.includeSummary = Boolean.valueOf(
         properties.getProperty(INCLUDE_SUMMARY, DEFAULT_INCLUDE_SUMMARY));
-    this.dateTimeZone = DateTimeZone.forID(properties.getProperty(TIME_ZONE, DEFAULT_TIME_ZONE));
+    this.dateTimeZone = DateTimeZone.forID(properties.getProperty(TIME_ZONE, IST));
 
     Period defaultPeriod = Period.parse(properties.getProperty(EVENT_CRAWL_OFFSET, DEFAULT_EVENT_CRAWL_OFFSET));
     this.preEventCrawlOffset = defaultPeriod;
