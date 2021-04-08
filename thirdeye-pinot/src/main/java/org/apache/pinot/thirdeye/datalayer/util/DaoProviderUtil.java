@@ -33,6 +33,7 @@ import org.apache.pinot.thirdeye.datalayer.ThirdEyePersistenceModule;
 import org.apache.pinot.thirdeye.datalayer.bao.jdbc.AbstractManagerImpl;
 import org.apache.pinot.thirdeye.datalayer.dto.AbstractDTO;
 import org.apache.pinot.thirdeye.datalayer.util.PersistenceConfig.DatabaseConfiguration;
+import org.apache.pinot.thirdeye.util.CustomConfigReader;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.h2.store.fs.FileUtils;
 import org.slf4j.Logger;
@@ -81,12 +82,13 @@ public abstract class DaoProviderUtil {
 
   private static DataSource createDataSource(final PersistenceConfig configuration) {
     final DataSource dataSource = new DataSource();
+    CustomConfigReader ccr = new CustomConfigReader();
     dataSource.setInitialSize(10);
     dataSource.setDefaultAutoCommit(false);
     dataSource.setMaxActive(100);
-    dataSource.setUsername(configuration.getDatabaseConfiguration().getUser());
-    dataSource.setPassword(configuration.getDatabaseConfiguration().getPassword());
-    dataSource.setUrl(configuration.getDatabaseConfiguration().getUrl());
+    dataSource.setUsername(ccr.readEnv(configuration.getDatabaseConfiguration().getUser()));
+    dataSource.setPassword(ccr.readEnv(configuration.getDatabaseConfiguration().getPassword()));
+    dataSource.setUrl(ccr.readEnv(configuration.getDatabaseConfiguration().getUrl()));
     dataSource.setDriverClassName(configuration.getDatabaseConfiguration().getDriver());
 
     dataSource.setValidationQuery("select 1");

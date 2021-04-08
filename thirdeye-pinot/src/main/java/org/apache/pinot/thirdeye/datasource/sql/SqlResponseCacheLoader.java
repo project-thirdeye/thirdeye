@@ -39,6 +39,7 @@ import org.apache.pinot.thirdeye.datasource.pinot.resultset.ThirdEyeResultSet;
 import org.apache.pinot.thirdeye.datasource.pinot.resultset.ThirdEyeResultSetGroup;
 import org.apache.pinot.thirdeye.detection.ConfigUtils;
 import org.apache.pinot.thirdeye.util.ThirdEyeUtils;
+import org.apache.pinot.thirdeye.util.CustomConfigReader;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -85,14 +86,14 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
   DataSource h2DataSource;
 
   public SqlResponseCacheLoader(Map<String, Object> properties) throws Exception {
-
+    CustomConfigReader ccr = new CustomConfigReader();
     // Init Presto datasources
     if (properties.containsKey(PRESTO)) {
       List<Map<String, Object>> prestoMapList = ConfigUtils.getList(properties.get(PRESTO));
       for (Map<String, Object> objMap: prestoMapList) {
         Map<String, String> dbNameToURLMap = (Map)objMap.get(DB);
-        String prestoUser = (String)objMap.get(USER);
-        String prestoPassword = getPassword(objMap);
+        String prestoUser = ccr.readEnv((String)objMap.get(USER));
+        String prestoPassword = ccr.readEnv(getPassword(objMap));
 
         for (Map.Entry<String, String> entry: dbNameToURLMap.entrySet()) {
           DataSource dataSource = new DataSource();
@@ -100,7 +101,7 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
           dataSource.setMaxActive(MAX_CONNECTIONS);
           dataSource.setUsername(prestoUser);
           dataSource.setPassword(prestoPassword);
-          dataSource.setUrl(entry.getValue());
+          dataSource.setUrl(ccr.readEnv(entry.getValue()));
 
           // Timeout before an abandoned(in use) connection can be removed.
           dataSource.setRemoveAbandonedTimeout(ABANDONED_TIMEOUT);
@@ -117,8 +118,8 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
       List<Map<String, Object>> mysqlMapList = ConfigUtils.getList(properties.get(MYSQL));
       for (Map<String, Object> objMap: mysqlMapList) {
         Map<String, String> dbNameToURLMap = (Map)objMap.get(DB);
-        String mysqlUser = (String)objMap.get(USER);
-        String mysqlPassword = getPassword(objMap);
+        String mysqlUser = ccr.readEnv((String)objMap.get(USER));
+        String mysqlPassword = ccr.readEnv(getPassword(objMap));
 
         for (Map.Entry<String, String> entry: dbNameToURLMap.entrySet()) {
           DataSource dataSource = new DataSource();
@@ -126,7 +127,7 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
           dataSource.setMaxActive(MAX_CONNECTIONS);
           dataSource.setUsername(mysqlUser);
           dataSource.setPassword(mysqlPassword);
-          dataSource.setUrl(entry.getValue());
+          dataSource.setUrl(ccr.readEnv(entry.getValue()));
 
           // Timeout before an abandoned(in use) connection can be removed.
           dataSource.setRemoveAbandonedTimeout(ABANDONED_TIMEOUT);
@@ -143,9 +144,9 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
       List<Map<String, Object>> verticaMapList = ConfigUtils.getList(properties.get(VERTICA));
       for (Map<String, Object> objMap: verticaMapList) {
         Map<String, String> dbNameToURLMap = (Map)objMap.get(DB);
-        String verticaUser = (String)objMap.get(USER);
-        String verticaPassword = getPassword(objMap);
-        String verticaDriver = (String)objMap.get(DRIVER);
+        String verticaUser = ccr.readEnv((String)objMap.get(USER));
+        String verticaPassword = ccr.readEnv(getPassword(objMap));
+        String verticaDriver = ccr.readEnv((String)objMap.get(DRIVER));
 
         for (Map.Entry<String, String> entry: dbNameToURLMap.entrySet()) {
           DataSource dataSource = new DataSource();
@@ -154,7 +155,7 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
           dataSource.setUsername(verticaUser);
           dataSource.setPassword(verticaPassword);
           dataSource.setDriverClassName(verticaDriver);
-          dataSource.setUrl(entry.getValue());
+          dataSource.setUrl(ccr.readEnv(entry.getValue()));
 
           // Timeout before an abandoned(in use) connection can be removed.
           dataSource.setRemoveAbandonedTimeout(ABANDONED_TIMEOUT);
@@ -170,16 +171,16 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
     if (properties.containsKey(BIGQUERY)) {
       List<Map<String, Object>> bigQueryMapList = ConfigUtils.getList(properties.get(BIGQUERY));
       for (Map<String, Object> objMap: bigQueryMapList) {
-        System.out.println(bigQueryMapList.toString());
+       // System.out.println(bigQueryMapList.toString()); Looks like this might leak credentials. Removing this
         Map<String, String> dbNameToURLMap = (Map)objMap.get(DB);
-        String bigQueryDriver = (String)objMap.get(DRIVER);
+        String bigQueryDriver = ccr.readEnv((String)objMap.get(DRIVER));
 
         for (Map.Entry<String, String> entry: dbNameToURLMap.entrySet()) {
           DataSource dataSource = new DataSource();
           dataSource.setInitialSize(INIT_CONNECTIONS);
           dataSource.setMaxActive(MAX_CONNECTIONS);
           dataSource.setDriverClassName(bigQueryDriver);
-          dataSource.setUrl(entry.getValue());
+          dataSource.setUrl(ccr.readEnv(entry.getValue()));
 
           // Timeout before an abandoned(in use) connection can be removed.
           dataSource.setRemoveAbandonedTimeout(ABANDONED_TIMEOUT);
@@ -198,9 +199,9 @@ public class SqlResponseCacheLoader extends CacheLoader<SqlQuery, ThirdEyeResult
 
       h2DataSource.setInitialSize(INIT_CONNECTIONS);
       h2DataSource.setMaxActive(MAX_CONNECTIONS);
-      String h2User = (String) objMap.get(USER);
-      String h2Password = getPassword(objMap);
-      h2Url = (String) objMap.get(DB);
+      String h2User = ccr.readEnv((String) objMap.get(USER));
+      String h2Password = ccr.readEnv(getPassword(objMap));
+      h2Url = ccr.readEnv((String) objMap.get(DB));
       h2DataSource.setUsername(h2User);
       h2DataSource.setPassword(h2Password);
       h2DataSource.setUrl(h2Url);
