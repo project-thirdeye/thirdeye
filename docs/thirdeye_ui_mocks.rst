@@ -25,7 +25,7 @@ ThirdEye UI Mocks
 .. toctree::
     :maxdepth: 1
 
-    :download: `Entity (multi-metrics) Monitoring <https://github.com/apache/incubator-pinot/files/4964811/ThirdEye_EntityMonitoring.pdf>`
-    :download: `Subscription group Management <https://github.com/apache/incubator-pinot/files/4964812/ThirdEye_SubscriptionGroups_Management.pdf>`
-    :download: `Suppress Alert <https://github.com/apache/incubator-pinot/files/4964813/ThirdEye_Suppress_Alerts.pdf>`
-    :download: `SLA monitoring <https://github.com/apache/incubator-pinot/files/4964810/ThirdEye_SLA_monitoring.pdf>`
+- `Entity (multi-metrics) Monitoring <https://github.com/apache/incubator-pinot/files/4964811/ThirdEye_EntityMonitoring.pdf>`_
+- `Subscription group Management <https://github.com/apache/incubator-pinot/files/4964812/ThirdEye_SubscriptionGroups_Management.pdf>`_
+- `Suppress Alert <https://github.com/apache/incubator-pinot/files/4964813/ThirdEye_Suppress_Alerts.pdf>`_
+- `SLA monitoring <https://github.com/apache/incubator-pinot/files/4964810/ThirdEye_SLA_monitoring.pdf>`_

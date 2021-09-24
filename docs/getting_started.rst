@@ -22,7 +22,7 @@
 ****************************
 Getting Started
 ****************************
-This document will help you set up ThirdEye(abbreviated as 'TE') with an external MySQL persistence layer.
+This document will help you set up ThirdEye (abbreviated as 'TE') with an external MySQL persistence layer.
 It will also demonstrate how to plugin your own datasets from custom datasources.
 
 Prerequisites

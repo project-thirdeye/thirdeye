@@ -33,21 +33,14 @@ Click on this link to import: ``http://localhost:1426/app/#/self-serve/import-sq
 Once the UI is fixed, this link should appear in the create alert page.
 
 Fill in the form which includes the following fields, and click Import Metrics.
- 
-``Table Name``: For Presto, it is the Presto table name, including all schema prefixes. For MySQL it is just the table name.
 
-``Time column``: Column name that contains the time.
-
-``Timezone``: Timezone of the time column.
-
-``Time Format``: Format of the time column.
-
-``Time Granularity``: The granularity of your metric. For example, daily data should choose 1DAYS. 
-Hourly data should choose 1HOURS.
-
-``Dimensions``: Add dimensions and fill in the name of the dimension
-
-``Metrics``: Add metrics and fill in the name and the aggregation method on the dimension when it is being aggregated by time.
+- ``Table Name``: For Presto, it is the Presto table name, including all schema prefixes. For MySQL it is just the table name.
+- ``Time column``: Column name that contains the time.
+- ``Timezone``: Timezone of the time column.
+- ``Time Format``: Format of the time column.
+- ``Time Granularity``: The granularity of your metric. For example, daily data should choose 1DAYS. Hourly data should choose 1HOURS.
+- ``Dimensions``: Add dimensions and fill in the name of the dimension
+- ``Metrics``: Add metrics and fill in the name and the aggregation method on the dimension when it is being aggregated by time.
 
 For example:
 

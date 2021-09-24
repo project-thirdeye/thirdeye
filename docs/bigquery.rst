@@ -28,11 +28,11 @@ See https://cloud.google.com/bigquery/providers/simba-drivers.
 The connector was tested with the JDBC driver `1.2.4`.
 
 WARNING: Using ThirdEye with BigQuery can incur some cost.
+
 TIPS:
-1. Use partitioned table, and use the _partitiontime as the time column in the ThirdEye metric.
-See https://cloud.google.com/bigquery/docs/partitioned-tables.
-2. Reserve slots to avoid on-demand query pricing.
-See https://cloud.google.com/bigquery/docs/reservations-intro.
+
+1. Use partitioned table, and use the _partitiontime as the time column in the ThirdEye metric. See https://cloud.google.com/bigquery/docs/partitioned-tables.
+2. Reserve slots to avoid on-demand query pricing. See https://cloud.google.com/bigquery/docs/reservations-intro.
 
 **0: Prerequisites**
 Rebuild ThirdEye with the specific resources for bigquery:
@@ -76,14 +76,15 @@ Note: the `dbname` here is an arbitrary name. For BigQuery you will most likely 
 See :ref:`import-sql-metric`.
 
 Specificities of BigQuery:
-``Table Name``: Use back tick, eg: ``\`project_id.dataset_id.table_name\```
-You can also unnest in the table name, eg: ``\`project_id.dataset_id.table_name\`,  unnest(repeated_field) as r``
+
+- ``Table Name``: Use back tick, eg: ``\`project_id.dataset_id.table_name\```. You can also unnest in the table name, eg: ``\`project_id.dataset_id.table_name\`,  unnest(repeated_field) as r``
 
 Example of time configuration:
-``Time column``:  ``UNIX_SECONDS(TIMESTAMP(DATETIME(_PARTITIONTIME)))``
-``Timezone``: ``UTC``
-``Time Format``: ``EPOCH``
-``Time Granularity``: ``1 SECONDS``
+
+- ``Time column``:  ``UNIX_SECONDS(TIMESTAMP(DATETIME(_PARTITIONTIME)))``
+- ``Timezone``: ``UTC``
+- ``Time Format``: ``EPOCH``
+- ``Time Granularity``: ``1 SECONDS``
 
 
 **4: Start an analysis**
