@@ -28,19 +28,22 @@ What is it for? (key features)
 Online monitoring and analysis of business and system metrics from multiple data sources. ThirdEye comes batteries included for both detection and analysis use cases. It aims to minimize the Mean-Time-To-Detection (MTTD) and Mean-Time-To-Recovery (MTTR) of production issues. ThirdEye improves its detection and analysis performance over time from incremental user feedback.
 
 **Detection**
+
 * Detection toolkit based on business rules and exponential smoothing
 * Realtime monitoring of high-dimensional time series
 * Native support for seasonality and permanent change points in time series
 * Email alerts with 1-click feedback for automated tuning of detection algorithms
 
 **Root-Cause Analysis**
+
 * Collaborative root-cause analysis dashboards
 * Interactive slice-and-dice of data, correlation analysis, and event identification
 * Reporting and archiving tools for anomalies and analyses
 * Knowledge graph construction over time from user feedback
 
 **Integration**
-* Connectors for continuous time series data from Pinot and CSV 
+
+* Connectors for continuous time series data from Pinot and CSV
 * Connectors for discrete event data sources, such as holidays from Google calendar
 * Plugin support for detection and analysis components
 

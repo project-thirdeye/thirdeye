@@ -32,7 +32,7 @@ The ``org.apache.pinot.thirdeye.dashboard.ThirdEyeDashboardApplication`` class i
 
 :ref:`dashboard.yml` and :ref:`rca.yml` are used to configure dashboard servers.
 
-- Backend servers are used to schedule tasks or run the tasks. 
+- Backend servers are used to schedule tasks or run the tasks.
 
 The ``org.apache.pinot.thirdeye.anomaly.ThirdEyeAnomalyApplication`` class is the entry point.
 
@@ -62,9 +62,9 @@ Here are a list of modules you can configure in this file:
 .. image:: https://user-images.githubusercontent.com/44730481/61093449-6d76c900-a3ff-11e9-85e6-01201ea71eeb.png
   :width: 500
 
-To enable one module, you can change the module's value to "true". 
+To enable one module, you can change the module's value to "true".
 
-For example, below configures a node with worker and scheduler enabled. 
+For example, below configures a node with worker and scheduler enabled.
 
 .. code-block:: yaml
 
@@ -93,6 +93,7 @@ persistence.yml
 ThirdEye uses MySQL to store all the metadata.  This file is used to configure MySQL database instance.
 
 databaseConfiguration: url: user: password: driver: com.mysql.jdbc.Driver
+
 Here is an example:
 
 databaseConfiguration: url: jdbc:mysql:///thirdeye?autoReconnect=true user: te_dev password: xxxxx driver: com.mysql.jdbc.Driver
@@ -110,7 +111,7 @@ Here is an example used in ThirdEye production which connects to two data source
 Please note ThirdEye support MySQL data source, and this configuration is different with persistence.yml.
 
 .. code-block:: yaml
-	
+
 	dataSourceConfigs:
 	  - className: org.apache.pinot.thirdeye.datasource.pinot.PinotThirdEyeDataSource
 	    properties:
@@ -138,7 +139,7 @@ cache-config.yml
 --------------------
 
 Decides which caching scheme(s) to use in ThirdEye for optimizing data fetching process. If applicable,
-contains settings for a user specified cache data source configuration. 
+contains settings for a user specified cache data source configuration.
 
 .. code-block:: yaml
 
@@ -166,10 +167,10 @@ contains settings for a user specified cache data source configuration.
                 <your config setting>: <value>
                 <your config setting>: <value>
                 ...
-                <your config setting>: <value> 
+                <your config setting>: <value>
 	    # you can add more cache data sources below if you like
 
-The configs for cache data sources are flexible and schemaless, so you can add as many config settings as you need or want. 
+The configs for cache data sources are flexible and schemaless, so you can add as many config settings as you need or want.
 For the most part, these settings will probably be used for connection and authentication configuration settings, like host URI(s)
 or username/password/certificate files to authenticate to the data source.
 
@@ -210,4 +211,4 @@ These pipelines are called online and not pre-loaded.
 
 Each pipeline derives from org.apache.pinot.thirdeye.rootcause.Pipeline class, and  has "inputNames", "outputName", "className" and "properties". One pipeline can take another pipeline's output as input and it is a DAG.
 
-The "className" is used to create instances using reflection. 
+The "className" is used to create instances using reflection.
