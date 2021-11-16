@@ -64,9 +64,9 @@ import org.slf4j.LoggerFactory;
 /**
  * The type Third eye dashboard application.
  */
-public class ThirdEyeDashboardApplication
+class ThirdEyeDashboardBaseApplication
     extends BaseThirdEyeApplication<ThirdEyeDashboardConfiguration> {
-  private static final Logger LOG = LoggerFactory.getLogger(ThirdEyeDashboardApplication.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ThirdEyeDashboardBaseApplication.class);
 
   private RequestStatisticsLogger requestStatisticsLogger;
   private ModelDownloaderManager modelDownloaderManager;
@@ -185,7 +185,12 @@ public class ThirdEyeDashboardApplication
     };
   }
 
+}
 
+
+public class ThirdEyeDashboardApplication {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ThirdEyeDashboardApplication.class);
   /**
    * The entry point of application.
    *
@@ -193,7 +198,7 @@ public class ThirdEyeDashboardApplication
    * @throws Exception the exception
    */
   public static void main(String[] args) throws Exception {
-    String thirdEyeConfigDir = "./config";
+    String thirdEyeConfigDir = "thirdeye-dashboard/config";
     if (args.length >= 1) {
       thirdEyeConfigDir = args[0];
     }
@@ -201,7 +206,6 @@ public class ThirdEyeDashboardApplication
 
     System.setProperty("dw.rootDir", thirdEyeConfigDir);
     String dashboardApplicationConfigFile = thirdEyeConfigDir + "/" + "dashboard.yml";
-    new ThirdEyeDashboardApplication().run("server", dashboardApplicationConfigFile);
+    new ThirdEyeDashboardBaseApplication().run("server", dashboardApplicationConfigFile);
   }
-
 }
