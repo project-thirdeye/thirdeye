@@ -1,5 +1,8 @@
 # ThirdEye
-This thirdeye respository has been archived. Please visit https://github.com/startreedata/thirdeye for the latest thirdeye.
+
+### Thirdeye is no longer being maintained by the Apache Community. In the interest of legacy users, this repository is archived and no further support is available. However, StarTree Inc (Original Creators of Apache Pinot) has taken ownership and has built a new revamped versiono f ThirdEye which is also available on Github at https://github.com/startreedata/thirdeye.
+
+### This repo is scheduled for deletion by the end of 2023.
 
 # Introduction to ThirdEye
 [![Build Status](https://api.travis-ci.org/apache/incubator-pinot.svg?branch=master)](https://travis-ci.org/apache/incubator-pinot) [![license](https://img.shields.io/github/license/linkedin/pinot.svg)](LICENSE)
