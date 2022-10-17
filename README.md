@@ -1,3 +1,6 @@
+# ThirdEye
+This thirdeye respository has been archived. Please visit https://github.com/startreedata/thirdeye for the latest thirdeye.
+
 # Introduction to ThirdEye
 [![Build Status](https://api.travis-ci.org/apache/incubator-pinot.svg?branch=master)](https://travis-ci.org/apache/incubator-pinot) [![license](https://img.shields.io/github/license/linkedin/pinot.svg)](LICENSE)
 
@@ -31,16 +34,3 @@ ThirdEye maintains a dedicated meta-data store to capture data sources, anomalie
 ThirdEye does not replace your issue tracker - it integrates with it. ThirdEye supports collaboration but focuses on the data-integration aspect of anomaly detection and root-cause analysis. After all, your organization probably already has a well-oiled issue resolution process that we don't want to disrupt.
 
 ThirdEye is not a generic dashboard builder toolkit. ThirdEye attempts to bring overview data from different sources into one single place on-demand. In-depth data about events, such as A/B experiments and deployments, should be kept in their respective systems. ThirdEye can link to these directly.
-
-## Getting Involved
- 
- - Ask questions on [ThirdEye Slack](https://communityinviter.com/apps/apache-thirdeye/apache-thirdeye)
-
-## Documentation
-
-Detailed documentation can be found at [ThirdEye documentation](https://thirdeye.readthedocs.io) for a complete description of ThirdEye's features.
-
-- [Quick Start](https://thirdeye.readthedocs.io/en/latest/quick_start.html)
-- [Data Sources Setup](https://thirdeye.readthedocs.io/en/latest/datasources.html)
-- [Production Settings](https://thirdeye.readthedocs.io/en/latest/production.html)
-- [Alert Setup](https://thirdeye.readthedocs.io/en/latest/alert_setup.html)
