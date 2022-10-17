@@ -1,6 +1,6 @@
 # ThirdEye
 
-### Thirdeye is no longer being maintained by the Apache Community. In the interest of legacy users, this repository is archived and no further support is available. However, StarTree Inc (Original Creators of Apache Pinot) has taken ownership and has built a new revamped versiono f ThirdEye which is also available on Github at https://github.com/startreedata/thirdeye.
+### Thirdeye is no longer being maintained by the Apache Community. In the interest of legacy users, this repository is archived and no further support is available. However, StarTree Inc (Original Creators of Apache Pinot) has taken ownership and has built a new revamped versiono of ThirdEye which is also available on Github at https://github.com/startreedata/thirdeye.
 
 ### This repo is scheduled for deletion by the end of 2023.
 
