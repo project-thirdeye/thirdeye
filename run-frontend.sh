@@ -3,6 +3,4 @@ echo "*******************************************************"
 echo "Launching ThirdEye Dashboard in demo mode"
 echo "*******************************************************"
 
-cd thirdeye-dashboard
-java -Dlog4j.configurationFile=log4j2.xml -cp "./target/thirdeye-dashboard-1.0.0-SNAPSHOT.jar" org.apache.pinot.thirdeye.dashboard.ThirdEyeDashboardApplication "./config"
-cd ..
+java -Dlog4j.configurationFile=log4j2.xml -cp "thirdeye-dist/target/thirdeye-dist-1.0.0-SNAPSHOT-dist/thirdeye-dist-1.0.0-SNAPSHOT/lib/*" org.apache.pinot.thirdeye.dashboard.ThirdEyeDashboardApplication "thirdeye-dashboard/config"
